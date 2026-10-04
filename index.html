@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reading Test 6 — The Price of Convenience</title>
+<style>
+:root{
+  --ink:#1F2340; --indigo:#3B3F8C; --violet:#5F63B5; --mint:#2FA68A; --amber:#C98A2E; --red:#B33A3A;
+  --paper:#F2F3F9; --white:#fff; --line:#D6D8EC; --muted:#5C608A; --pale:#E8EAF7; --cream:#FFF6E4;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%}
+body{background:var(--paper);color:var(--ink);
+  font-family:"Segoe UI",Roboto,system-ui,-apple-system,Arial,sans-serif;font-size:18px;line-height:1.55}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px 60px}
+
+.bar{position:sticky;top:0;z-index:60;background:var(--ink);color:#fff;border-bottom:4px solid var(--mint)}
+.bar-in{max-width:1400px;margin:0 auto;padding:9px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-weight:700;font-size:16.5px}
+.brand span{color:var(--mint)}
+.stats{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.stat{background:rgba(255,255,255,.14);border-radius:999px;padding:4px 13px;font-size:14.5px;font-weight:600;white-space:nowrap}
+.stat b{color:#E8C87A}
+
+h1{font-family:Georgia,"Times New Roman",serif;font-size:2.05rem;line-height:1.2;margin:.55em 0 .2em}
+h2{font-family:Georgia,serif;font-size:1.4rem;margin:1.3em 0 .45em}
+h3{font-size:1.08rem;margin:1.1em 0 .35em}
+.card{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:22px;margin:18px 0}
+.btn{font:inherit;font-weight:700;cursor:pointer;border:none;border-radius:10px;padding:13px 22px;
+  background:var(--indigo);color:#fff;transition:background .2s,transform .08s}
+.btn:hover{background:var(--violet)}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.alt{background:#fff;color:var(--indigo);border:2px solid var(--indigo)}
+.btn.alt:hover{background:var(--pale)}
+.btn.gold{background:var(--mint);color:#fff}
+.btn.gold:hover{background:#38bb9c}
+.btn.sm{padding:8px 15px;font-size:15px;border-radius:8px}
+:focus-visible{outline:3px solid var(--mint);outline-offset:2px}
+.hide{display:none !important}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.lead{font-size:1.1rem;color:var(--muted);max-width:62ch}
+.kicker{color:var(--indigo);font-weight:700;font-size:15px}
+.note{background:var(--pale);border-left:5px solid var(--indigo);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+.warn{background:var(--cream);border-left:5px solid var(--amber);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+input[type=text]{font:inherit;padding:10px 12px;border:2px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);width:100%}
+input[type=text]:focus{border-color:var(--indigo)}
+select{font:inherit;padding:10px 12px;border:2px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);width:100%}
+select:focus{border-color:var(--indigo)}
+label.fld{display:block;font-weight:600;margin:14px 0 6px}
+
+.steps{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0}
+.step{font-size:14px;font-weight:700;border-radius:999px;padding:6px 14px;background:#fff;border:2px solid var(--line);color:var(--muted)}
+.step.on{background:var(--indigo);border-color:var(--indigo);color:#fff}
+.step.ok{background:var(--mint);border-color:var(--mint);color:#fff}
+.tbox{border:1px solid var(--line);border-left:6px solid var(--mint);border-radius:0 12px 12px 0;background:#fff;padding:16px 18px;margin:14px 0}
+.tbox h4{margin:0 0 6px;font-size:1.02rem;color:var(--indigo)}
+.trap{border-left-color:var(--red)}
+.trap h4{color:var(--red)}
+ol.method{margin:6px 0 0 20px;padding:0}
+ol.method li{margin:6px 0}
+.mini{background:var(--pale);border-radius:12px;padding:16px;margin-top:16px}
+
+#split{display:flex;height:calc(100vh - 58px);position:relative}
+#pane1,#pane2{overflow-y:auto;padding:20px 22px 80px}
+#pane1{flex:0 0 50%;background:#fff;border-right:1px solid var(--line)}
+#pane2{flex:1 1 auto}
+#divider{width:12px;cursor:col-resize;background:var(--pale);flex:0 0 12px;position:relative;touch-action:none}
+#divider::after{content:"";position:absolute;top:50%;left:3px;width:6px;height:52px;margin-top:-26px;background:var(--indigo);border-radius:99px;opacity:.5}
+#divider:hover::after{opacity:1}
+.passage{font-family:Georgia,"Times New Roman",serif;font-size:1.06rem;line-height:1.72;max-width:66ch}
+.passage p{margin:0 0 1.05em}
+.pl{display:inline-block;font-family:"Segoe UI",sans-serif;font-weight:700;color:#fff;background:var(--indigo);
+  width:26px;height:26px;line-height:26px;text-align:center;border-radius:6px;margin-right:9px;font-size:14px;vertical-align:2px}
+.passage p.lit{background:var(--cream);border-radius:6px;box-shadow:0 0 0 8px var(--cream)}
+mark.hl{background:#FFE08A;color:inherit;border-radius:3px;padding:0 1px;cursor:pointer;box-shadow:inset 0 -2px 0 rgba(0,0,0,.09)}
+mark.hl:hover{background:#FFD24D}
+#hlPop{position:fixed;z-index:150;display:none;background:var(--ink);border-radius:10px;padding:6px;box-shadow:0 6px 18px rgba(0,0,0,.28)}
+#hlPop button{font:inherit;font-size:14px;font-weight:700;border:none;border-radius:7px;padding:8px 14px;cursor:pointer;background:#FFE08A;color:#2B2B2B}
+#hlPop button+button{margin-left:6px;background:transparent;color:#fff}
+.hl-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:4px 0 16px}
+.hl-tools small{color:var(--muted);font-size:13.5px}
+.ptitle{font-family:Georgia,serif;font-size:1.6rem;margin:0 0 .1em}
+.psub{color:var(--muted);font-size:15px;margin-bottom:10px}
+
+.qgrp{margin-bottom:28px}
+.qgrp h3{margin-top:0;color:var(--indigo);font-size:1.12rem}
+.inst{background:var(--pale);border-radius:10px;padding:11px 14px;font-size:15.5px;margin-bottom:14px}
+.qitem{display:flex;gap:12px;align-items:flex-start;margin:12px 0}
+.qn{flex:0 0 32px;height:32px;line-height:30px;text-align:center;border:2px solid var(--indigo);color:var(--indigo);
+  border-radius:8px;font-weight:700;font-size:15px;background:#fff;cursor:pointer}
+.qn.filled{background:var(--indigo);color:#fff}
+.qbody{flex:1 1 auto;min-width:0}
+.opts label{display:block;border:2px solid var(--line);border-radius:9px;padding:10px 13px;margin:7px 0;cursor:pointer;background:#fff}
+.opts label:hover{border-color:var(--indigo);background:var(--pale)}
+.opts input{margin-right:9px}
+.opts label.on{border-color:var(--indigo);background:var(--pale)}
+table.tbl{width:100%;border-collapse:collapse;font-size:.95rem;background:#fff;margin:8px 0}
+table.tbl th,table.tbl td{border:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}
+table.tbl th{background:var(--indigo);color:#fff;font-weight:600}
+.featbox{background:#fff;border:2px dashed var(--indigo);border-radius:10px;padding:12px 14px;margin:10px 0;font-size:15.5px}
+.featbox div{margin:4px 0}
+.featbox b{color:var(--indigo)}
+.submit-bar{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px;margin:26px 0 20px}
+.submit-bar p{margin:0 0 12px;color:var(--muted);font-size:15px}
+
+.big{font-family:Georgia,serif;font-size:3.6rem;font-weight:700;color:var(--indigo);line-height:1}
+.breakdown{width:100%;border-collapse:collapse;margin-top:8px}
+.breakdown td{padding:8px 6px;border-bottom:1px solid var(--line);font-size:.97rem}
+.meter{height:10px;background:var(--pale);border-radius:99px;overflow:hidden;min-width:100px}
+.meter>i{display:block;height:100%}
+.rev{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:9px 0;background:#fff}
+.rev.bad{border-left:5px solid var(--red)}
+.rev.good{border-left:5px solid var(--mint)}
+.tag{font-size:13px;font-weight:700;color:#fff;background:var(--mint);border-radius:6px;padding:2px 8px}
+.rev.bad .tag{background:var(--red)}
+.ev{background:var(--cream);border-radius:8px;padding:9px 12px;margin-top:8px;font-family:Georgia,serif;font-size:.97rem}
+.cert{background:#fff;border:3px double var(--indigo);border-radius:8px;padding:34px 26px;text-align:center;margin:20px 0}
+.cert h2{font-family:Georgia,serif;font-size:1.95rem;margin:.2em 0;color:var(--indigo)}
+.cert .nm{font-family:Georgia,serif;font-size:2rem;border-bottom:2px solid var(--mint);display:inline-block;padding:0 24px 4px;margin:12px 0}
+.foot{text-align:center;color:var(--muted);font-size:14px;padding:24px 0 8px;border-top:1px solid var(--line);margin-top:28px}
+
+@media (max-width:820px){
+  #split{display:block;height:auto}
+  #pane1{flex:none;width:100%;border-right:none;border-bottom:3px solid var(--indigo);max-height:46vh;padding:16px}
+  #pane2{padding:16px 16px 60px}
+  #divider{display:none}
+  body{font-size:17px}
+  h1{font-size:1.6rem}
+}
+@media print{.bar,.btn,.noprint,#divider{display:none!important} body{background:#fff}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:99}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="bar-in">
+    <div class="brand">Reading Test 6 <span>·</span> Commerce</div>
+    <div class="stats">
+      <div class="stat" id="sPhase">Getting started</div>
+      <div class="stat">Answered <b id="sAns">0</b>/20</div>
+      <button class="btn alt sm hide" id="btnBackTeach" onclick="goTeach()">Question types</button>
+    </div>
+  </div>
+</div>
+
+<section id="vStart"><div class="wrap">
+  <div style="padding-top:26px">
+    <div class="kicker">B1+ / B2 · Band 6 target · Wordlist 6 vocabulary in context</div>
+    <h1>The Price of Convenience</h1>
+    <p class="lead">The last paper in the series, and the one with the most opinion in it. A 640-word
+    argument about the end of cash, and the four question types that deal with what a writer <i>claims</i>
+    rather than what is simply true — including Yes / No / Not Given, which is not the same task as the
+    True / False / Not Given you met in Test 5.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">What is in this test</h3>
+    <table class="tbl">
+      <tr><th>Questions</th><th>Type</th><th>What you write</th></tr>
+      <tr><td>1–4</td><td>Matching information to paragraphs</td><td>Choose a paragraph, A–G</td></tr>
+      <tr><td>5–9</td><td>Sentence completion</td><td>No more than two words</td></tr>
+      <tr><td>10–14</td><td>Yes / No / Not Given</td><td>Choose one of three</td></tr>
+      <tr><td>15–18</td><td>Matching sentence endings</td><td>Choose an ending, A–G</td></tr>
+      <tr><td>19–20</td><td>Multiple choice</td><td>Choose one answer</td></tr>
+    </table>
+    <p style="color:var(--muted);font-size:15px;margin-bottom:0">The shop and its owner are invented, as IELTS
+    practice passages usually are. The research on card spending, and the direction the figures are moving, are real.</p>
+  </div>
+
+  <div class="card">
+    <label class="fld" for="nm">Your name (it goes on the certificate)</label>
+    <input type="text" id="nm" placeholder="e.g. Khalid Al Mansoori" autocomplete="name">
+    <div class="row" style="margin-top:16px">
+      <button class="btn" onclick="startTeach()">Learn the five question types</button>
+      <button class="btn alt" onclick="skipTeach()">Go straight to the test</button>
+      <button class="btn alt" onclick="document.getElementById('loadFile').click()">Load saved answers</button>
+      <input type="file" id="loadFile" accept=".json" class="hide" onchange="loadJSON(event)">
+    </div>
+  </div>
+
+  <div class="warn"><b>The teaching part is worth doing first.</b> The last lesson is different from the others:
+  it is about running a whole paper — what order to do the tasks in, and when to stop and guess.
+  You can skip it and come back at any point.</div>
+
+  <div class="foot">Designed by: Nazila Motahari &nbsp;|&nbsp; HCT Abu Dhabi &nbsp;|&nbsp; Companion to B1+ Vocabulary List 6</div>
+</div></section>
+
+<section id="vTeach" class="hide"><div class="wrap">
+  <h1 id="tTitle" style="margin-bottom:0"></h1>
+  <div class="steps" id="tSteps"></div>
+  <div class="card" id="tCard"></div>
+  <div class="row noprint">
+    <button class="btn alt" id="tPrev" onclick="teachMove(-1)">← Previous</button>
+    <button class="btn" id="tNext" onclick="teachMove(1)">Next type →</button>
+    <button class="btn gold hide" id="tGo" onclick="startTest()">Start the test</button>
+    <button class="btn gold hide" id="tResume" onclick="startTest()">← Back to the test</button>
+    <button class="btn gold hide" id="tBack" onclick="results()">← Back to my results</button>
+  </div>
+</div></section>
+
+<section id="vTest" class="hide">
+  <div id="split">
+    <div id="pane1">
+      <div class="ptitle">The Price of Convenience</div>
+      <div class="psub">Read the passage and answer Questions 1–20. Tap a question number to highlight its paragraph.</div>
+      <div class="hl-tools noprint">
+        <button class="btn alt sm" onclick="clearHighlights()">Clear highlights</button>
+        <small>Select any text in the passage to highlight it. Tap a highlight to remove it.</small>
+      </div>
+      <div class="passage" id="passage"></div>
+    </div>
+    <div id="divider" role="separator" aria-label="Resize panels" tabindex="0"></div>
+    <div id="pane2">
+      <div id="qHolder"></div>
+      <div class="submit-bar">
+        <p>When you have answered everything, submit. You can still review every answer afterwards.</p>
+        <div id="submitWarn" class="warn hide"></div>
+        <button class="btn gold" onclick="submitTest()">Submit my answers</button>
+        <button class="btn alt sm" onclick="saveJSON()">Save and finish later</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="vRes" class="hide"><div class="wrap">
+  <div class="card" style="text-align:center">
+    <div id="rEmoji" style="font-size:2.8rem"></div>
+    <div class="big" id="rScore">0/20</div>
+    <div style="color:var(--muted);font-weight:600" id="rBand"></div>
+    <h2 id="rMsg" style="margin-top:.3em"></h2>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">Accuracy by question type</h3>
+    <table class="breakdown" id="rBreak"></table>
+    <p style="color:var(--muted);font-size:15px;margin-bottom:0">The type with the lowest bar is the one to practise next.</p>
+  </div>
+  <div id="rCert"></div>
+  <div class="card noprint">
+    <div class="row">
+      <button class="btn" onclick="showReview()">Review every answer</button>
+      <button class="btn alt" onclick="goTeach()">Review the question types</button>
+      <button class="btn alt" onclick="saveJSON()">Download my results (.json)</button>
+      <button class="btn alt" onclick="retake()">Take the test again</button>
+    </div>
+  </div>
+  <div id="rReview"></div>
+  <div class="foot">Designed by: Nazila Motahari &nbsp;|&nbsp; HCT Abu Dhabi</div>
+</div></section>
+
+<div id="hlPop">
+  <button onmousedown="event.preventDefault()" onclick="applyHighlight()">Highlight</button>
+  <button onmousedown="event.preventDefault()" onclick="hidePop()">Cancel</button>
+</div>
+
+<canvas id="confetti" class="hide"></canvas>
+
+<script>
+/* =========================================================
+   PASSAGE
+   ========================================================= */
+const PARAS=[
+["A","The pearl merchants who once traded in this souq kept their accounts in a notebook and settled them twice a year, in cash. The shop that stands on the same corner today has a small card reader on the counter and a printed label beside it: CARD ONLY. The owner, who took over the business from his father, has not handled a banknote at work for eighteen months. He says he does not miss it, and he is probably right not to. What is less clear is whether the rest of us have thought carefully about what we gave away in exchange."],
+["B","The change has been extraordinarily fast. In 2015, roughly four-fifths of payments in the region were made in cash; the figure is now under a quarter, and in some cities under a tenth. Banks have closed branches, so a customer who once walked into an office and asked an assistant for help now makes the same request on a phone. Money that used to move from hand to hand now moves as a transfer between two accounts, and the whole journey takes less than a second."],
+["C","The attractions are real, and anyone who dismisses them is not being honest. A card payment is faster than counting notes. It leaves a record, which matters when you need to prove what you paid. Nobody has to carry a week's wages through a crowded street. For a business, the end of the day no longer involves a locked box and a drive to the bank. These are not small gains, and most of the people who enjoy them would not go back."],
+["D","There is a bill, however, and it is not sent to the customer. Each card payment costs the shopkeeper a fee — usually between one and three per cent — which goes to the company that provides the machine. On a thin margin that is the difference between a good month and a bad one, and because the customer never sees the charge, there is no pressure to reduce it. The shopkeeper may also have no idea who is in charge of the record that his payments create, or what is done with it afterwards."],
+["E","Then there is a quieter effect, which researchers have been describing for twenty years. People spend more when they pay by card than when they pay with cash, and they do it without noticing. Handing over notes appears to produce a small moment of discomfort that a card does not; the money feels less real, and the limit feels further away. Whether this matters is a matter of opinion, but it is at least worth knowing before you decide that the change is purely a convenience."],
+["F","The people who lose by all this are predictable, and that is the most uncomfortable part of it. Workers paid a daily wage in cash cannot pay a card-only bus fare. Older people who never opened an online account find that the branch where they were known has closed. Someone who is unemployed, or who owes money and has had a card withdrawn, is left standing outside a shop that used to serve everybody. A system that works beautifully for ninety per cent of people and excludes the other ten is not a neutral piece of technology. It is a decision, and somebody made it."],
+["G","None of this is an argument for returning to the notebook. Cash has real costs of its own: it is easy to steal, awkward to tax, and expensive to move around. The argument is narrower — that a change this large should be a choice rather than something that simply happens, and that the people who are left outside it should be part of the conversation. Governments can require that cash still be accepted, as a few have already done. The rest of us can at least notice. The shopkeeper on the corner made his decision carefully, and it was the right one for him. It is worth asking who made the decision for everybody else."]
+];
+
+const ENDINGS=[
+ {l:"A",t:"makes the request on a phone instead."},
+ {l:"B",t:"should be a choice rather than an accident."},
+ {l:"C",t:"spend more without realising it."},
+ {l:"D",t:"there is no pressure to make it smaller."},
+ {l:"E",t:"has to drive to the bank every evening."},
+ {l:"F",t:"must pay the fee out of their own wages."},
+ {l:"G",t:"keeps a notebook of every payment made."}
+];
+
+/* =========================================================
+   QUESTIONS — 20 marks
+   ========================================================= */
+const ITEMS=[
+/* 1-4 matching information */
+{n:1,g:"info",t:"Matching information",a:"D",para:3,ev:"Each card payment costs the shopkeeper a fee — usually between one and three per cent",
+ why:"<b>D.</b> This is the only paragraph that gives the cost paid by the seller. Paragraph C mentions money too, but as a benefit, not a cost."},
+{n:2,g:"info",t:"Matching information",a:"F",para:5,ev:"Workers paid a daily wage in cash cannot pay a card-only bus fare",
+ why:"<b>F.</b> The examples of people shut out — cash-paid workers, older customers, someone unemployed — are all in this paragraph."},
+{n:3,g:"info",t:"Matching information",a:"A",para:0,ev:"kept their accounts in a notebook and settled them twice a year, in cash",
+ why:"<b>A.</b> The description of how the old merchants handled money opens the passage. Paragraph G mentions the notebook again, but only as a thing we are <u>not</u> going back to."},
+{n:4,g:"info",t:"Matching information",a:"G",para:6,ev:"Cash has real costs of its own: it is easy to steal, awkward to tax, and expensive to move around",
+ why:"<b>G.</b> This is the one place where the writer lists the disadvantages of cash itself."},
+/* 5-9 sentence completion */
+{n:5,g:"sent",t:"Sentence completion",a:"four-fifths",acc:["four-fifths","four fifths"],para:1,
+ ev:"In 2015, roughly four-fifths of payments in the region were made in cash",
+ why:"<b>four-fifths.</b> Copy the fraction as the passage writes it; <i>80 per cent</i> means the same but is not in the text."},
+{n:6,g:"sent",t:"Sentence completion",a:"request",acc:["request","the same request"],para:1,
+ ev:"asked an assistant for help now makes the same request on a phone",
+ why:"<b>request</b> — the noun after <i>makes</i>. The verb <i>asked</i> belongs to the first half of the sentence."},
+{n:7,g:"sent",t:"Sentence completion",a:"record",acc:["record","a record"],para:2,ev:"It leaves a record, which matters when you need to prove what you paid",
+ why:"<b>record.</b> A card payment leaves one, and that is what proves what you paid."},
+{n:8,g:"sent",t:"Sentence completion",a:"machine",acc:["machine","the machine"],para:3,ev:"which goes to the company that provides the machine",
+ why:"<b>machine.</b> The fee goes to the company that provides it — not to the bank or the government, which the passage never says."},
+{n:9,g:"sent",t:"Sentence completion",a:"cash",acc:["cash"],para:6,ev:"Governments can require that cash still be accepted, as a few have already done",
+ why:"<b>cash.</b> One short word is often the whole answer; do not add words to fill the space."},
+/* 10-14 Yes / No / Not Given */
+{n:10,g:"ynng",t:"Yes / No / Not Given",a:"YES",para:6,ev:"The shopkeeper on the corner made his decision carefully, and it was the right one for him",
+ why:"<b>YES.</b> The writer states plainly that the shopkeeper's decision was the right one for him."},
+{n:11,g:"ynng",t:"Yes / No / Not Given",a:"NO",para:2,ev:"The attractions are real, and anyone who dismisses them is not being honest",
+ why:"<b>NO.</b> The writer says the opposite: the advantages are real, and dismissing them would be dishonest."},
+{n:12,g:"ynng",t:"Yes / No / Not Given",a:"NOT GIVEN",para:3,ev:"Each card payment costs the shopkeeper a fee — usually between one and three per cent",
+ why:"<b>NOT GIVEN.</b> The passage gives the size of the fee but never compares it with fees anywhere else. No comparison in the text means Not Given."},
+{n:13,g:"ynng",t:"Yes / No / Not Given",a:"NOT GIVEN",para:5,ev:"Older people who never opened an online account find that the branch where they were known has closed",
+ why:"<b>NOT GIVEN.</b> We are told about older people who never opened an online account, but nothing about how many older people use online banking overall."},
+{n:14,g:"ynng",t:"Yes / No / Not Given",a:"YES",para:6,ev:"the people who are left outside it should be part of the conversation",
+ why:"<b>YES.</b> This is the writer's own argument, stated with <i>should</i> — the clearest signal of an opinion."},
+/* 15-18 matching sentence endings */
+{n:15,g:"end",t:"Matching sentence endings",a:"A",para:1,ev:"a customer who once walked into an office and asked an assistant for help now makes the same request on a phone",
+ why:"<b>A.</b> The customer who used to visit a branch now makes the request by phone."},
+{n:16,g:"end",t:"Matching sentence endings",a:"D",para:3,ev:"because the customer never sees the charge, there is no pressure to reduce it",
+ why:"<b>D.</b> <i>No pressure to make it smaller</i> is a rewording of <i>no pressure to reduce it</i>. Ending F is the trap — nobody in the passage pays the fee out of their wages."},
+{n:17,g:"end",t:"Matching sentence endings",a:"C",para:4,ev:"People spend more when they pay by card than when they pay with cash, and they do it without noticing",
+ why:"<b>C.</b> <i>Without realising it</i> rewords <i>without noticing</i>."},
+{n:18,g:"end",t:"Matching sentence endings",a:"B",para:6,ev:"a change this large should be a choice rather than something that simply happens",
+ why:"<b>B.</b> <i>Rather than an accident</i> rewords <i>rather than something that simply happens</i>."},
+/* 19-20 multiple choice */
+{n:19,g:"mcq",t:"Multiple choice",a:"A",para:3,ev:"There is a bill, however, and it is not sent to the customer",
+ why:"<b>A.</b> The 'bill' is the card fee, and it is paid by the shop rather than the shopper. The sentence is a metaphor, not a real invoice."},
+{n:20,g:"mcq",t:"Multiple choice",a:"B",para:6,ev:"The argument is narrower — that a change this large should be a choice rather than something that simply happens",
+ why:"<b>B.</b> The writer opens the paragraph by rejecting a return to cash, then states the narrower argument: the change should be an open choice."}
+];
+const GROUPS={info:"Matching information",sent:"Sentence completion",ynng:"Yes / No / Not Given",end:"Matching sentence endings",mcq:"Multiple choice"};
+
+/* =========================================================
+   TEACHING CARDS
+   ========================================================= */
+const TEACH=[
+{title:"Matching information to paragraphs",tab:"Information",
+ tests:"Whether you can find one specific piece of information inside a long text. Unlike matching headings, this is not about the main idea — the information may be a single sentence in the middle of a paragraph.",
+ trap:"Stopping at the first paragraph that mentions the topic. Several paragraphs here mention money, and two mention the notebook; only one contains the information the question describes.",
+ method:["Read all the statements first, and underline the thing being described.",
+  "Scan rather than read. You are hunting for one fact, not understanding the argument.",
+  "These questions are <u>not</u> in passage order, so expect to jump around.",
+  "A paragraph may be the answer to more than one question, or to none at all."],
+ mini:{q:"Statement: <i>a mention of the disadvantages of cash itself</i>. Paragraph A describes merchants settling accounts in cash. Paragraph G says cash <i>is easy to steal, awkward to tax, and expensive to move around</i>. Which paragraph?",
+  o:["Paragraph A","Paragraph G","Both A and G"],a:1,
+  fb:"<b>Paragraph G.</b> Paragraph A mentions cash, but says nothing against it. Mentioning the topic is not the same as containing the information."}},
+
+{title:"Sentence completion",tab:"Sentences",
+ tests:"Whether you can find a detail and fit it into a sentence that has been reworded. The grammar of the gap tells you as much as the meaning does.",
+ trap:"Writing a correct idea in the wrong words, or in too many words. If the passage says <i>four-fifths</i>, then <i>80 per cent</i> scores zero, however right it is.",
+ method:["Read the whole sentence and decide what kind of word is missing.",
+  "Look at the words on each side of the gap — they are usually reworded from the passage.",
+  "These questions follow the order of the passage, so use the one before to find the next.",
+  "Copy exactly and count your words."],
+ mini:{q:"Instruction: <i>NO MORE THAN TWO WORDS</i>. Passage: <i>In 2015, roughly four-fifths of payments were made in cash.</i> Gap: <i>In 2015, about ______ of payments were made in cash.</i>",
+  o:["80 per cent","four-fifths","most"],a:1,
+  fb:"<b>four-fifths.</b> All three are true, but only one is in the passage. In completion tasks the words must be the passage's own."}},
+
+{title:"Yes / No / Not Given",tab:"Y/N/NG",
+ tests:"Whether a statement agrees with <u>the writer's opinion</u>. This is not the same task as True / False / Not Given, which is about facts — here you are tracking what the writer thinks.",
+ trap:"Answering from the facts rather than the writer's view, and choosing No when the answer is Not Given. No means the writer argues the opposite. Not Given means the writer never expresses a view on it at all.",
+ method:["Find the opinion words: <i>should</i>, <i>worth</i>, <i>the argument is</i>, <i>it is worth asking</i>.",
+  "Decide what the writer actually claims, in your own words.",
+  "Compare the statement with that claim, not with the world.",
+  "If the writer discusses the topic but takes no position on this exact point, it is Not Given."],
+ mini:{q:"Passage: <i>Each card payment costs the shopkeeper a fee — usually between one and three per cent.</i> Statement: <i>Card fees in this region are higher than in other parts of the world.</i>",
+  o:["YES","NO","NOT GIVEN"],a:2,
+  fb:"<b>NOT GIVEN.</b> The writer gives the size of the fee but never compares it with anywhere else. With no comparison in the text, you cannot say the writer agrees or disagrees."}},
+
+{title:"Matching sentence endings",tab:"Endings",
+ tests:"Whether you can complete a sentence so that it is both grammatically correct and true according to the passage. There are more endings than beginnings.",
+ trap:"Choosing an ending that sounds right on its own. Read the whole sentence — beginning plus ending — and check that the finished sentence says what the passage says.",
+ method:["Read the beginning and predict how the sentence should finish.",
+  "Rule out endings that cannot fit grammatically. That often removes two or three.",
+  "Find the place in the passage; the beginnings follow passage order.",
+  "Read your finished sentence aloud in your head and test it against the text."],
+ mini:{q:"Beginning: <i>Because the customer never sees the card fee, …</i> Passage: <i>because the customer never sees the charge, there is no pressure to reduce it.</i>",
+  o:["must pay the fee out of their own wages.","there is no pressure to make it smaller.","has to drive to the bank every evening."],a:1,
+  fb:"<b>…there is no pressure to make it smaller.</b> <i>Make it smaller</i> rewords <i>reduce it</i>. The first ending uses real words from the passage in a claim it never makes."}},
+
+{title:"Running a whole paper",tab:"Strategy",
+ tests:"Not a question type — the skill of managing sixty minutes. In the real test you get three passages and forty questions, and most lost marks are lost to the clock rather than to the English.",
+ trap:"Doing the tasks strictly in the order they are printed. Matching information and matching headings send you all over the passage; completion and Yes/No/Not Given follow the passage order. Mixing them badly wastes time.",
+ method:["Spend twenty minutes per passage. When the twenty minutes are up, move on even if you are not finished.",
+  "Do the ordered tasks (completion, Yes/No/Not Given) first — they pull you through the passage once.",
+  "Do the jumping tasks (matching information, headings) second, when you already know where things are.",
+  "Never leave a blank. There is no penalty for a wrong answer, and a three-option question is a one-in-three chance."],
+ mini:{q:"You have four minutes left and six questions unanswered: three Yes/No/Not Given and three sentence completion. What is the best use of the time?",
+  o:["Guess the Yes/No/Not Given, then work on the completion.","Work carefully through them in number order.","Leave them all blank and check your earlier answers."],a:0,
+  fb:"<b>Guess the three-option questions first.</b> They take seconds and each one is a one-in-three chance. Completion answers cannot be guessed, so spend the remaining minutes there. A blank is always worth zero."}}
+];
+
+/* =========================================================
+   STATE
+   ========================================================= */
+const STATE={name:"",ans:{},teachDone:[],ti:0,started:false,submitted:false,score:0};
+const BY_N={}; ITEMS.forEach(it=>BY_N[it.n]=it);
+const $=id=>document.getElementById(id);
+function show(id){
+  const hp=document.getElementById("hlPop"); if(hp)hp.style.display="none";
+  ["vStart","vTeach","vTest","vRes"].forEach(v=>$(v).classList.add("hide"));
+  $(id).classList.remove("hide"); window.scrollTo(0,0);
+}
+function norm(s){return (s||"").toLowerCase().trim().replace(/[.,!?;:'"()]/g,"").replace(/\s+/g," ");}
+function esc(s){return (s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function toast(m){const d=document.createElement("div");d.textContent=m;
+ d.style.cssText="position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 18px;border-radius:10px;z-index:200;font-size:15px;max-width:90%";
+ document.body.appendChild(d);setTimeout(()=>d.remove(),2600);}
+function countAns(){
+  let n=0; ITEMS.forEach(it=>{const v=STATE.ans[it.n]; if(v&&String(v).trim())n++;});
+  $("sAns").textContent=n; return n;
+}
+
+/* ---------- teaching ---------- */
+function startTeach(){STATE.name=$("nm").value.trim()||"Student";STATE.ti=0;goTeach();}
+function skipTeach(){STATE.name=$("nm").value.trim()||"Student";startTest();}
+function goTeach(){show("vTeach");$("sPhase").textContent="Learning the question types";$("btnBackTeach").classList.add("hide");renderTeach();}
+function renderSteps(){
+  $("tSteps").innerHTML=TEACH.map((x,i)=>
+   '<span class="step'+(i===STATE.ti?" on":(STATE.teachDone.includes(i)?" ok":""))+'">'+(i+1)+". "+(x.tab||x.title)+'</span>').join("");
+}
+function renderTeach(){
+  const t=TEACH[STATE.ti];
+  $("tTitle").textContent=t.title;
+  renderSteps();
+  $("tCard").innerHTML=
+   '<div class="tbox"><h4>What it tests</h4>'+t.tests+'</div>'+
+   '<div class="tbox trap"><h4>The trap</h4>'+t.trap+'</div>'+
+   '<div class="tbox"><h4>The method</h4><ol class="method">'+t.method.map(m=>"<li>"+m+"</li>").join("")+'</ol></div>'+
+   '<div class="mini"><h3 style="margin-top:0">Try it</h3><p>'+t.mini.q+'</p><div class="opts" id="miniOpts">'+
+   t.mini.o.map((o,i)=>'<label><input type="radio" name="mini" value="'+i+'" onchange="miniCheck('+i+')">'+o+'</label>').join("")+
+   '</div><div id="miniFb"></div></div>';
+  $("tPrev").disabled=STATE.ti===0;
+  $("tNext").classList.toggle("hide",STATE.ti===TEACH.length-1);
+  $("tGo").classList.toggle("hide",STATE.started||STATE.submitted);
+  $("tGo").textContent = STATE.ti===TEACH.length-1 ? "Start the test" : "Skip to the test \u2192";
+  $("tResume").classList.toggle("hide",!STATE.started||STATE.submitted);
+  $("tBack").classList.toggle("hide",!STATE.submitted);
+}
+function miniCheck(i){
+  const t=TEACH[STATE.ti];
+  document.querySelectorAll("#miniOpts label").forEach((l,k)=>{
+    l.classList.toggle("on",k===i);
+    l.style.borderColor=k===t.mini.a?"var(--mint)":(k===i?"var(--red)":"var(--line)");
+    if(k===t.mini.a)l.style.background="#E4F5F0";
+  });
+  $("miniFb").innerHTML='<div class="tbox" style="border-left-color:'+(i===t.mini.a?"var(--mint)":"var(--red)")+'">'+
+   (i===t.mini.a?"<h4>That's it</h4>":"<h4 style=\"color:var(--red)\">Look again</h4>")+t.mini.fb+'</div>';
+  if(!STATE.teachDone.includes(STATE.ti))STATE.teachDone.push(STATE.ti);
+  renderSteps();
+}
+function teachMove(d){const n=STATE.ti+d;if(n<0||n>=TEACH.length)return;STATE.ti=n;renderTeach();window.scrollTo({top:0,behavior:"smooth"});}
+
+/* ---------- test ---------- */
+function startTest(){
+  STATE.started=true;
+  show("vTest"); $("sPhase").textContent="Reading test";
+  $("btnBackTeach").classList.remove("hide");
+  buildPassage(); buildQuestions(); countAns();
+}
+function buildPassage(){
+  const pass=$("passage");
+  if(pass.dataset.built) return;   // keep any highlights the student has made
+  pass.dataset.built="1";
+  pass.innerHTML=PARAS.map((p,i)=>'<p id="p'+i+'"><span class="pl">'+p[0]+'</span>'+p[1]+'</p>').join("");
+}
+function litPara(i){
+  document.querySelectorAll("#passage p").forEach(p=>p.classList.remove("lit"));
+  const el=$("p"+i); if(!el)return;
+  el.classList.add("lit");
+  if(el.scrollIntoView) el.scrollIntoView({behavior:"smooth",block:"center"});
+  setTimeout(()=>el.classList.remove("lit"),2600);
+}
+function qn(n){const it=BY_N[n];
+  return '<button class="qn'+(STATE.ans[n]&&String(STATE.ans[n]).length?" filled":"")+'" id="qn'+n+
+   '" title="Highlight the paragraph" onclick="litPara('+it.para+')">'+n+'</button>';}
+
+function buildQuestions(){
+  const paraSel=n=>'<select onchange="setAns('+n+',this.value)"><option value="">—</option>'+
+    PARAS.map(p=>'<option value="'+p[0]+'"'+(STATE.ans[n]===p[0]?" selected":"")+'>Paragraph '+p[0]+'</option>').join("")+'</select>';
+  const endSel=n=>'<select onchange="setAns('+n+',this.value)"><option value="">—</option>'+
+    ENDINGS.map(f=>'<option value="'+f.l+'"'+(STATE.ans[n]===f.l?" selected":"")+'>'+f.l+" — "+f.t+'</option>').join("")+'</select>';
+  const ynSel=n=>'<select onchange="setAns('+n+',this.value)"><option value="">—</option>'+
+    ["YES","NO","NOT GIVEN"].map(v=>'<option value="'+v+'"'+(STATE.ans[n]===v?" selected":"")+'>'+v+'</option>').join("")+'</select>';
+  const inp=n=>'<input type="text" value="'+esc(STATE.ans[n]||"")+'" oninput="setAns('+n+',this.value)" autocomplete="off" spellcheck="false" aria-label="Question '+n+'">';
+
+  let h="";
+
+  /* 1-4 matching information */
+  const info=[[1,"a reference to the cost that the seller has to pay"],
+   [2,"examples of people who cannot use a cashless system"],
+   [3,"a description of how money was handled in the past"],
+   [4,"a mention of the disadvantages of cash itself"]];
+  h+='<div class="qgrp"><h3>Questions 1–4</h3>'+
+   '<div class="inst">Which paragraph contains the following information? Write the correct letter, <b>A–G</b>. '+
+   'These questions are <b>not</b> in the order of the passage.</div>'+
+   info.map(([n,txt])=>'<div class="qitem">'+qn(n)+'<div class="qbody">'+txt+'<div style="margin-top:7px;max-width:240px">'+paraSel(n)+'</div></div></div>').join("")+
+   '</div>';
+
+  /* 5-9 sentence completion */
+  const sent=[[5,'In 2015, about ______ of all payments in the region were made in cash.'],
+   [6,'A customer who once asked an assistant for help now makes the same ______ on a phone.'],
+   [7,'A card payment leaves a ______, which is useful when you need proof of what you paid.'],
+   [8,'The fee on each card payment goes to the company that provides the ______.'],
+   [9,'A few governments have made a rule that ______ must still be accepted.']];
+  h+='<div class="qgrp"><h3>Questions 5–9</h3>'+
+   '<div class="inst">Complete the sentences below. Choose <b>NO MORE THAN TWO WORDS FROM THE PASSAGE</b> for each answer.</div>'+
+   sent.map(([n,txt])=>'<div class="qitem">'+qn(n)+'<div class="qbody">'+txt+'<div style="margin-top:7px;max-width:280px">'+inp(n)+'</div></div></div>').join("")+
+   '</div>';
+
+  /* 10-14 Yes / No / Not Given */
+  const yn=[[10,"The shopkeeper was right to stop accepting cash in his own shop."],
+   [11,"The advantages of paying by card have been exaggerated."],
+   [12,"Card fees in this region are higher than in other parts of the world."],
+   [13,"Most older people in the region now use online banking."],
+   [14,"People who are excluded by the change should be included in the discussion about it."]];
+  h+='<div class="qgrp"><h3>Questions 10–14</h3>'+
+   '<div class="inst">Do the following statements agree with the views of the writer? Write <b>YES</b> if the statement agrees with the writer, '+
+   '<b>NO</b> if it contradicts the writer, or <b>NOT GIVEN</b> if it is impossible to say what the writer thinks about it.</div>'+
+   yn.map(([n,txt])=>'<div class="qitem">'+qn(n)+'<div class="qbody">'+txt+'<div style="margin-top:7px;max-width:220px">'+ynSel(n)+'</div></div></div>').join("")+
+   '</div>';
+
+  /* 15-18 matching sentence endings */
+  const begin=[[15,"Banks have closed branches, so a customer who wants help now"],
+   [16,"Because the customer never sees the card fee,"],
+   [17,"Researchers have found that people paying by card"],
+   [18,"The writer argues that a change of this size"]];
+  h+='<div class="qgrp"><h3>Questions 15–18</h3>'+
+   '<div class="inst">Complete each sentence with the correct ending, <b>A–G</b>. There are more endings than sentences.</div>'+
+   '<div class="featbox">'+ENDINGS.map(f=>'<div><b>'+f.l+'</b> &nbsp;'+f.t+'</div>').join("")+'</div>'+
+   begin.map(([n,txt])=>'<div class="qitem">'+qn(n)+'<div class="qbody">'+txt+' …<div style="margin-top:7px;max-width:380px">'+endSel(n)+'</div></div></div>').join("")+
+   '</div>';
+
+  /* 19-20 multiple choice */
+  const q19=["The cost of card payments is paid by the shop, not the shopper.",
+   "Customers now receive their bills much later than before.",
+   "Shops have stopped giving customers a printed receipt.",
+   "The bank sends the bill straight to the government."];
+  const q20=["To argue that shops should go back to accepting cash.",
+   "To argue that the change should be an open choice.",
+   "To praise the shopkeeper for making a careful decision.",
+   "To explain the cost of moving cash around safely."];
+  const mcq=(n,arr,label)=>'<div class="qgrp"><h3>Question '+n+'</h3><div class="inst">'+label+'</div>'+
+   '<div class="opts">'+arr.map((o,i)=>{const L="ABCD"[i];
+     return '<label'+(STATE.ans[n]===L?' class="on"':'')+'><input type="radio" name="q'+n+'" value="'+L+'"'+
+     (STATE.ans[n]===L?" checked":"")+' onchange="setAns('+n+',\''+L+'\')"><b>'+L+'</b> &nbsp;'+o+'</label>';}).join("")+'</div></div>';
+  h+=mcq(19,q19,'Choose the correct letter, <b>A–D</b>. In paragraph <b>D</b>, what does the writer mean by “There is a bill, however, and it is not sent to the customer”?');
+  h+=mcq(20,q20,'Choose the correct letter, <b>A–D</b>. What is the writer\'s main purpose in the final paragraph?');
+
+  $("qHolder").innerHTML=h;
+}
+function setAns(n,v){
+  STATE.ans[n]=v;
+  const b=$("qn"+n); if(b)b.classList.toggle("filled",!!String(v).trim());
+  document.querySelectorAll('.opts label').forEach(l=>{const i=l.querySelector("input");if(i&&i.type==="radio")l.classList.toggle("on",i.checked);});
+  countAns();
+}
+
+/* divider */
+(function(){
+  const d=$("divider"), s=$("split"); let drag=false;
+  const move=x=>{const r=s.getBoundingClientRect();let pct=(x-r.left)/r.width*100;
+    pct=Math.max(25,Math.min(75,pct)); $("pane1").style.flex="0 0 "+pct+"%";};
+  d.addEventListener("pointerdown",e=>{drag=true;d.setPointerCapture(e.pointerId);e.preventDefault();});
+  d.addEventListener("pointermove",e=>{if(drag)move(e.clientX);});
+  d.addEventListener("pointerup",e=>{drag=false;d.releasePointerCapture(e.pointerId);});
+  d.addEventListener("keydown",e=>{
+    const cur=parseFloat(($("pane1").style.flex||"0 0 50%").match(/([\d.]+)%/)[1]);
+    if(e.key==="ArrowLeft")$("pane1").style.flex="0 0 "+Math.max(25,cur-5)+"%";
+    if(e.key==="ArrowRight")$("pane1").style.flex="0 0 "+Math.min(75,cur+5)+"%";});
+})();
+
+/* ---------- marking ---------- */
+function markItem(it){
+  const v=STATE.ans[it.n];
+  if(it.acc)return it.acc.some(a=>norm(a)===norm(v))?1:0;
+  return v===it.a?1:0;
+}
+function submitTest(){
+  const n=countAns();
+  if(n<20){
+    const w=$("submitWarn");
+    w.classList.remove("hide");
+    w.innerHTML='<b>You have answered '+n+' of 20 questions.</b> Anything you leave blank scores zero. '+
+      'In the real test there is no penalty for guessing, so it is always worth writing something.'+
+      '<div class="row" style="margin-top:12px">'+
+      '<button class="btn gold" onclick="doSubmit()">Submit anyway</button>'+
+      '<button class="btn alt" onclick="cancelSubmit()">Go back and finish</button></div>';
+    if(w.scrollIntoView) w.scrollIntoView({behavior:"smooth",block:"center"});
+    return;
+  }
+  doSubmit();
+}
+function cancelSubmit(){ $("submitWarn").classList.add("hide"); }
+function doSubmit(){
+  $("submitWarn").classList.add("hide");
+  STATE.submitted=true;
+  STATE.score=ITEMS.reduce((a,it)=>a+markItem(it),0);
+  results();
+}
+function bandOf(s){
+  if(s>=19)return "Band 8.0+";
+  if(s>=17)return "Band 7.0–7.5";
+  if(s>=15)return "Band 6.5";
+  if(s>=13)return "Band 6.0";
+  if(s>=11)return "Band 5.5";
+  if(s>=9)return "Band 5.0";
+  return "Band 4.5 or below";
+}
+function results(){
+  show("vRes"); $("sPhase").textContent="Results";
+  const s=STATE.score, pct=Math.round(s/20*100);
+  $("rScore").textContent=s+"/20";
+  $("rBand").textContent=bandOf(s)+" (indicative only — a real test has 40 questions)";
+  let e,m;
+  if(pct>=90){e="🏆";m="Excellent. These five question types are under control.";}
+  else if(pct>=80){e="🎉";m="Strong — you have earned the certificate.";}
+  else if(pct>=65){e="👍";m="A solid Band 6 result. Look at your weakest type below.";}
+  else if(pct>=50){e="📊";m="Halfway. Go back through the question-type lessons, then retake.";}
+  else{e="🔁";m="Start with the five lessons again — the traps are costing you marks, not the vocabulary.";}
+  $("rEmoji").textContent=e; $("rMsg").textContent=m;
+
+  $("rBreak").innerHTML=Object.keys(GROUPS).map(k=>{
+    const list=ITEMS.filter(i=>i.g===k);
+    const tot=list.length, got=list.reduce((a,i)=>a+markItem(i),0);
+    const p=Math.round(got/tot*100);
+    return '<tr><td style="width:42%">'+GROUPS[k]+'</td><td style="width:15%"><b>'+got+'/'+tot+'</b></td>'+
+     '<td><div class="meter"><i style="width:'+p+'%;background:'+(p>=80?"var(--mint)":p>=50?"var(--amber)":"var(--red)")+'"></i></div></td></tr>';
+  }).join("");
+
+  if(s>=16){
+    $("rCert").innerHTML='<div class="cert"><div style="font-size:2.6rem">🏅</div>'+
+     '<div style="letter-spacing:2px;color:var(--indigo);font-weight:700;font-size:13.5px">Higher Colleges of Technology · Abu Dhabi</div>'+
+     '<h2>Certificate of Achievement</h2><p style="margin:0;color:var(--muted)">This certifies that</p>'+
+     '<div class="nm">'+esc(STATE.name)+'</div>'+
+     '<p style="max-width:46ch;margin:8px auto">has completed <b>IELTS Reading Test 6: The Price of Convenience</b>, scoring <b>'+s+
+     '/20</b> ('+pct+'%) across matching information, sentence completion, Yes / No / Not Given, sentence endings and multiple-choice questions.</p>'+
+     '<p style="color:var(--muted);font-size:15px">'+new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})+'</p>'+
+     '<p style="font-style:italic;margin-top:16px">Designed by: Nazila Motahari</p>'+
+     '<button class="btn gold noprint" onclick="window.print()" style="margin-top:8px">Print / save the certificate</button></div>';
+    confetti();
+  } else {
+    $("rCert").innerHTML='<div class="warn"><b>Certificate: not yet.</b> You need 16 out of 20. You are '+(16-s)+
+     ' mark'+((16-s)===1?"":"s")+' away — review the answers below, then take the test again.</div>';
+  }
+}
+function showReview(){
+  const html=Object.keys(GROUPS).map(k=>{
+    const list=ITEMS.filter(i=>i.g===k);
+    return '<h3>'+GROUPS[k]+'</h3>'+list.map(it=>{
+      const got=markItem(it), v=STATE.ans[it.n];
+      const given=(v&&String(v).trim())?String(v):"(no answer)";
+      const ok=got===1;
+      return '<div class="rev '+(ok?"good":"bad")+'"><span class="tag">'+got+'/1</span> '+
+       '<b>Q'+it.n+'</b> &nbsp;Your answer: '+esc(given)+
+       (ok?"":' &nbsp;·&nbsp; Correct: <b style="color:var(--mint)">'+esc(it.a)+'</b>')+
+       '<div style="font-size:15.5px;margin-top:6px">'+it.why+'</div>'+
+       '<div class="ev">Paragraph '+PARAS[it.para][0]+': “…'+it.ev+'…”</div></div>';
+    }).join("");
+  }).join("");
+  $("rReview").innerHTML='<div class="card"><h2 style="margin-top:0">Every answer, with the evidence</h2>'+html+'</div>';
+  const rv=$("rReview"); if(rv.scrollIntoView) rv.scrollIntoView({behavior:"smooth"});
+}
+function retake(){
+  const w=$("submitWarn"); if(w) w.classList.add("hide");
+  STATE.ans={}; STATE.submitted=false; STATE.score=0;
+  $("rReview").innerHTML=""; $("rCert").innerHTML=""; startTest();
+}
+
+/* ---------- save / load ---------- */
+function saveJSON(){
+  const data={app:"IELTS Reading Test 6 — The Price of Convenience (B1+ Wordlist 6)",
+   student:STATE.name,date:new Date().toISOString(),submitted:STATE.submitted,
+   score:STATE.submitted?STATE.score:null,outOf:20,band:STATE.submitted?bandOf(STATE.score):null,
+   byType:Object.keys(GROUPS).map(k=>{const list=ITEMS.filter(i=>i.g===k);
+     return {type:GROUPS[k],correct:STATE.submitted?list.reduce((a,i)=>a+markItem(i),0):null,outOf:list.length};}),
+   answers:ITEMS.map(it=>({n:it.n,type:it.t,given:STATE.ans[it.n]||"",correct:STATE.submitted?markItem(it)===1:null})),
+   state:{ans:STATE.ans,teachDone:STATE.teachDone,started:STATE.started,submitted:STATE.submitted,score:STATE.score}};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="ReadingTest6-"+(STATE.name||"student").replace(/\s+/g,"-")+".json";
+  a.click(); URL.revokeObjectURL(a.href);
+  toast("Saved. Open this file with the Load button to carry on.");
+}
+function loadJSON(ev){
+  const f=ev.target.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{try{
+    const d=JSON.parse(r.result); if(!d.state)throw 0;
+    STATE.name=d.student||"Student"; STATE.ans=d.state.ans||{};
+    STATE.teachDone=d.state.teachDone||[];
+    STATE.started=!!d.state.started||Object.keys(STATE.ans).length>0;
+    STATE.submitted=!!d.state.submitted; STATE.score=d.state.score||0;
+    $("nm").value=STATE.name;
+    if(STATE.submitted){buildPassage();results();}else{startTest();}
+    toast("Answers restored for "+STATE.name+".");
+  }catch(e){toast("That file could not be read. Choose a file saved by this app.");}};
+  r.readAsText(f); ev.target.value="";
+}
+
+/* =========================================================
+   HIGHLIGHTER
+   ========================================================= */
+let hlRange=null;
+function hidePop(){const p=$("hlPop");if(p)p.style.display="none";hlRange=null;}
+function showPop(rect){
+  const p=$("hlPop"); p.style.display="block";
+  const w=p.offsetWidth||160, h=p.offsetHeight||40;
+  let x=rect.left+rect.width/2-w/2;
+  x=Math.max(8,Math.min(x,window.innerWidth-w-8));
+  let y=rect.top-h-8; if(y<8) y=rect.bottom+8;
+  p.style.left=x+"px"; p.style.top=y+"px";
+}
+function selectionInPassage(){
+  const sel=window.getSelection();
+  if(!sel||sel.isCollapsed||!sel.rangeCount) return null;
+  const r=sel.getRangeAt(0);
+  const pass=$("passage"); if(!pass) return null;
+  const c=r.commonAncestorContainer;
+  if(c!==pass && !pass.contains(c)) return null;
+  if(!r.toString().trim()) return null;
+  return r;
+}
+function highlightRange(range){
+  if(range.collapsed) return;
+  const nodes=[]; const root=range.commonAncestorContainer;
+  if(root.nodeType===3){ nodes.push(root); }
+  else{
+    const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{
+      acceptNode(n){
+        if(!n.nodeValue||!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        if(n.parentNode&&n.parentNode.classList&&n.parentNode.classList.contains("pl")) return NodeFilter.FILTER_REJECT;
+        return range.intersectsNode(n)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT;
+      }});
+    let n; while((n=walker.nextNode())) nodes.push(n);
+  }
+  nodes.forEach(node=>{
+    let s=0, e=node.nodeValue.length;
+    if(node===range.startContainer) s=range.startOffset;
+    if(node===range.endContainer) e=range.endOffset;
+    if(e<=s) return;
+    if(node.parentNode&&node.parentNode.nodeName==="MARK") return;
+    const mid=(s>0)?node.splitText(s):node;
+    if(e-s<mid.nodeValue.length) mid.splitText(e-s);
+    const mark=document.createElement("mark");
+    mark.className="hl"; mark.title="Tap to remove this highlight";
+    mid.parentNode.insertBefore(mark,mid); mark.appendChild(mid);
+  });
+}
+function applyHighlight(){
+  if(hlRange){ highlightRange(hlRange); const s=window.getSelection(); if(s)s.removeAllRanges(); }
+  hidePop();
+}
+function unwrapMark(m){
+  const t=document.createTextNode(m.textContent);
+  m.parentNode.replaceChild(t,m);
+  if(t.parentNode) t.parentNode.normalize();
+}
+function clearHighlights(){
+  const pass=$("passage"); if(!pass)return;
+  const marks=[...pass.querySelectorAll("mark.hl")];
+  if(!marks.length){ toast("There are no highlights to clear."); return; }
+  marks.forEach(unwrapMark); pass.normalize(); hidePop();
+  toast(marks.length+" highlight"+(marks.length===1?"":"s")+" cleared.");
+}
+["mouseup","touchend"].forEach(ev=>document.addEventListener(ev,e=>{
+  const pop=$("hlPop");
+  if(pop&&pop.contains(e.target)) return;
+  setTimeout(()=>{
+    const r=selectionInPassage();
+    if(r){ hlRange=r.cloneRange(); showPop(r.getBoundingClientRect()); } else hidePop();
+  },10);
+}));
+document.addEventListener("click",e=>{
+  if(!e.target||!e.target.closest) return;
+  const m=e.target.closest("mark.hl"); const pass=$("passage");
+  if(m&&pass&&pass.contains(m)) unwrapMark(m);
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") hidePop(); });
+window.addEventListener("resize",hidePop);
+
+function confetti(){
+  const c=$("confetti"); c.classList.remove("hide");
+  const x=c.getContext&&c.getContext("2d");
+  if(!x){c.classList.add("hide");return;}
+  c.width=innerWidth; c.height=innerHeight;
+  const cols=["#3B3F8C","#2FA68A","#C98A2E","#5F63B5","#B33A3A"];
+  let bits=Array.from({length:120},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height,
+   w:6+Math.random()*7,h:8+Math.random()*9,c:cols[(Math.random()*cols.length)|0],
+   v:1.6+Math.random()*3,r:Math.random()*6,s:(Math.random()-.5)*.2}));
+  let t=0;
+  (function loop(){t++;x.clearRect(0,0,c.width,c.height);
+    bits.forEach(b=>{b.y+=b.v;b.r+=b.s;x.save();x.translate(b.x,b.y);x.rotate(b.r);x.fillStyle=b.c;x.fillRect(-b.w/2,-b.h/2,b.w,b.h);x.restore();});
+    if(t<300)requestAnimationFrame(loop);else{x.clearRect(0,0,c.width,c.height);c.classList.add("hide");}})();
+}
+</script>
+</body>
+</html>
